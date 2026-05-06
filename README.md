@@ -18,4 +18,3 @@ Projeto simples de formulário de cadastro em HTML, CSS e JavaScript.
 - O projeto foi reorganizado para ter `index.html` na raiz do repositório.
 - A pasta `assets/` contém os estilos e imagens usados pela página.
 - Este layout facilita o deploy no GitHub Pages usando a raiz do repositório como fonte.
-
