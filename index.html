@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Formulário de cadastro</title>
+</head>
+<body>
+    <div class="container">
+        <div class="form-image">
+            <img src="assets/img/img-container.svg">
+        </div>
+        <div class="form">
+            <form action="#">
+                <div class="form-header">
+                    <div class="title">
+                        <h1>Cadastre seu currículo</h1>
+                    </div>
+                    <div class="input-dados">
+                        <div class="input-box">
+                            <label for="nomecompleto">Nome Completo</label>
+                            <input id="nomecompleto" type="text" name="nomecompleto" placeholder="Seu nome completo" required>
+                        </div>
+                        <div class="input-box">
+                            <label for="email">Email</label>
+                            <input id="email" type="text" name="email" placeholder="Seu melhor email" required>
+                        </div>
+                        <div class="input-box">
+                            <label for="numerodecelular">Número de celular</label>
+                            <input id="numerodecelular" type="tel" name="numerodecelular" placeholder="Celular com DDD" required>
+                        </div>
+                        <div class="input-box">
+                            <label for="linkedin">Linkedin</label>
+                            <input id="linkedin" type="url" name="linkedin" placeholder="https://linkedin.com/in/" required>
+                        </div>
+                        <div class="input-box">
+                            <label for="pais">País de origem</label>
+                            <input id="pais" type="text" name="pais" placeholder="Seu país de origem" required>
+                        </div>
+                        <div class="input-box">
+                            <label for="cidade">Cidade</label>
+                            <input id="cidade" type="text" name="cidade" placeholder="Informe sua cidade" required>
+                        </div>
+
+                    </div>
+                    <div class="anexo-curriculo">
+                        <label class="field-label" for="curriculo">Currículo</label>
+                        <label for="curriculo" class="file-label">
+                            + Anexar currículo
+                        </label>
+                        <input
+                            id="curriculo" type="file" name="curriculo" accept=".pdf,.doc,.docx" hidden required>
+                        <div class="file-selected" aria-hidden="true">
+                            <div class="file-selected__info">
+                                <span class="file-selected__icon">📎</span>
+                                <span class="file-selected__name"></span>
+                            </div>
+                            <button type="button" class="file-selected__remove" aria-label="Remover arquivo">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+                    <div class="candidatar-button">
+                        <button type="button" id="openModalButton" disabled>Candidatar-se para a vaga</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="successModal" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h2>Inscrição realizada</h2>
+                <p>O envio foi registrado com sucesso. Você pode fechar este aviso para voltar ao formulário.</p>
+            </div>
+            <button type="button" class="modal-close" id="closeModalButton">Fechar</button>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('curriculo');
+        const fileLabel = document.querySelector('.file-label');
+        const fileSelected = document.querySelector('.file-selected');
+        const fileName = document.querySelector('.file-selected__name');
+        const removeButton = document.querySelector('.file-selected__remove');
+        const formInputs = document.querySelectorAll('.input-box input');
+        const openModalButton = document.getElementById('openModalButton');
+
+        const updateSubmitButton = () => {
+            const allTextInputsFilled = Array.from(formInputs).every(input => input.value.trim() !== '');
+            const fileAttached = fileInput.files.length > 0;
+            openModalButton.disabled = !(allTextInputsFilled && fileAttached);
+        };
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length) {
+                fileName.textContent = fileInput.files[0].name;
+                fileLabel.style.display = 'none';
+                fileSelected.style.display = 'flex';
+                fileSelected.setAttribute('aria-hidden', 'false');
+            }
+            updateSubmitButton();
+        });
+
+        formInputs.forEach(input => {
+            input.addEventListener('input', updateSubmitButton);
+        });
+
+        const resetForm = () => {
+            formInputs.forEach(input => {
+                input.value = '';
+            });
+            fileInput.value = '';
+            fileLabel.style.display = '';
+            fileSelected.style.display = 'none';
+            fileSelected.setAttribute('aria-hidden', 'true');
+            fileName.textContent = '';
+            updateSubmitButton();
+        };
+
+        removeButton.addEventListener('click', () => {
+            fileInput.value = '';
+            fileLabel.style.display = '';
+            fileSelected.style.display = 'none';
+            fileSelected.setAttribute('aria-hidden', 'true');
+            updateSubmitButton();
+        });
+        const closeModalButton = document.getElementById('closeModalButton');
+        const successModal = document.getElementById('successModal');
+
+        const toggleModal = (show) => {
+            successModal.classList.toggle('active', show);
+            successModal.setAttribute('aria-hidden', !show);
+        };
+
+        openModalButton.addEventListener('click', () => toggleModal(true));
+        closeModalButton.addEventListener('click', () => {
+            toggleModal(false);
+            resetForm();
+        });
+        successModal.addEventListener('click', (event) => {
+            if (event.target === successModal) {
+                toggleModal(false);
+            }
+        });
+    </script>
+</body>
+</html>
